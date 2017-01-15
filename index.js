@@ -1,61 +1,26 @@
 #!/usr/bin/env node
+var program = require('commander');
 
-// 1 生成flex-hosts.json文件
-// 2 编写启动clam的工具
-
-// 这些相对位置，应该都是当前的执行命令行所在的位置
-// 
-var cwd = process.cwd();
-var path = require('path');
-const exec = require('child_process').exec;
-
-var config = require(path.join(cwd, './mockx.js'));
-
-var fs = require('fs');
-
-// 1 生成一份flex-hosts写入
-// 2 生成一份脚本，
-// 
-
-function run(){
-	genHosts(config.domains);
-	// copyMockx();
-	genBoot();
-	runServer();
+if (process.argv.length <= 2) {
+  console.log("欢迎使用mockx命令行工具集！\n通过 mockx-cli --help 查看可用命令");
 }
 
-// function copyMockx(){
-// 	var mockxContent = fs.readFileSync(path.join(cwd, './mockx.js'));
-// 	fs.writeFileSync(path.join(cwd,'./.config/mockx.js'), mockxContent);
-// }
+program
+  .version(require("./package.json").version)
+  .usage("<commands> [argv...]");
 
-function genHosts(domains){
-	domains = domains || [];
+program
+  .command("init")
+  .description("初始化一个mockx服务的目录结构")
+  .action(function () {
+  	require('./init')
+  });
 
-	var hostsCode = '{"127.0.0.1": ["' +  domains.join('","') + '"] }';
+program
+  .command("serve")
+  .description("启动一个mockx服务，需要使用sudo")
+  .action(function () {
+  	require('./serve')
+  });
 
-	fs.writeFileSync(path.join(cwd,'./flex-hosts.json'), hostsCode);
-}
-
-function genBoot(){
-	var bootCode = 'var config_dir = "./.config"; var server = require("plug-base"); server.root("src"); server.config(config_dir); var mockx = require("mockx"); server.plug(mockx).listen(80, 443);';
-
-	fs.writeFileSync(path.join(cwd,'./serve.js'), bootCode);
-}
-
-function runServer(){
-	// var serverProcess = exec('sudo node serve.js');
-	// serverProcess.stdout.pipe(process.stdout);
-	var config_dir = "./";
-	var server = require("plug-base");
-	server.root("src"); server.config(config_dir);
-
-	var mockx = require("mockx");
-	server.plug(mockx).listen(80, 443);
-}
-
-run();
-
-
-
-
+program.parse(process.argv);

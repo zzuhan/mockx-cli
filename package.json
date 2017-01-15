@@ -1,7 +1,11 @@
 {
-	"name": "mockx-cli",
-	"version": "0.0.1",
-	"bin": {
-		"mockx": "./index.js"
-	}
+  "name": "mockx-cli",
+  "version": "0.0.3",
+  "bin": {
+    "mockx": "./index.js"
+  },
+  "dependencies": {
+    "commander": "^2.9.0",
+    "simple-git": "*"
+  }
 }
