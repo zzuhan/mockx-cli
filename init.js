@@ -30,15 +30,5 @@ git.clone(gitpath, 'mockx-serve', {
 	rmGitOrigin.stdout.on('data', function (data) {
 		console.log('stdout', data);
 	});
-
-	// npm install
-	var npmInstall = spawn('npm', ['install']);
-	npmInstall.stdout.on('data', function (data) {
-		console.log('npm install done', data);
-	})
-	npmInstall.stdout.on('error', function (data) {
-		console.log('npm install error', data);
-	})
-
 });
 
